@@ -19,20 +19,24 @@ public class TeacherRepo {
     }
 
     public void createTeacher(Teacher teacher){
+        System.out.println("Am ajuns in clasa TeacherRepo");
         getTeacherDaoImp().addTeacher(teacher);
     }
 
     public Teacher readTeacher(Integer id) {
+        System.out.println("Am ajuns in clasa TeacherRepo");
         Teacher teacher = getTeacherDaoImp().displayTeacherById(id);
         return teacher;
     }
 
     public Teacher modifyTeacher(Integer id, String discipline) {
+        System.out.println("Am ajuns in clasa TeacherRepo");
         Teacher teacher = getTeacherDaoImp().updateTeacherById(id, discipline);
         return teacher;
     }
 
     public void takeoutTeacher(Integer id) {
+        System.out.println("Am ajuns in clasa TeacherRepo");
         getTeacherDaoImp().deleteTeacherById(id);
     }
 }

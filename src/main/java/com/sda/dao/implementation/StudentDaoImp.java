@@ -5,7 +5,12 @@ import com.sda.entities.Student;
 import com.sda.utils.HibernateUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Service;
+
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class StudentDaoImp implements StudentDAO {
@@ -13,12 +18,13 @@ public class StudentDaoImp implements StudentDAO {
 
     public void addStudent(Student student) {
         System.out.println("Am ajuns in clasa StudentDaoImp");
-        try(Session session = HibernateUtils.getSessionFactory().openSession()){
+        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             session.beginTransaction();
-            Integer id  = (Integer) session.save(student);
-            System.out.println("Student was creates with id: "+id);
+            Integer id = (Integer) session.save(student);
+            System.out.println("Student was creates with id: " + id);
             session.getTransaction().commit();
-        }catch (HibernateException e){
+
+        } catch (HibernateException e) {
             e.printStackTrace();
         }
     }
@@ -26,34 +32,49 @@ public class StudentDaoImp implements StudentDAO {
     public Student displayStudentById(Integer id) {
         System.out.println("Am ajuns in clasa StudentDaoImp");
         Student student = null;
-        try(Session session = HibernateUtils.getSessionFactory().openSession()){
-            student = session.get(Student.class,id);
-            if(student!=null){
+        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
+            student = session.get(Student.class, id);
+            if (student != null) {
                 System.out.println("Student exist in database. ");
-            }else {
+            } else {
                 System.out.println("Student does not exist in database.");
             }
-        }catch (HibernateException e){
+        } catch (HibernateException e) {
             e.printStackTrace();
         }
         return student;
     }
 
+    public List<Student> displayAllStudent() {
+        List<Student> studentList = new ArrayList<>();
+        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
+            session.beginTransaction();
+            String HQL = "FROM Student";
+            Query query = session.createQuery(HQL);
+            studentList = query.list();
+            session.getTransaction().commit();
+
+        }catch (HibernateException e){
+            e.printStackTrace();
+        }
+        return studentList;
+    }
+
     public Student updateStudentById(Integer id, Double averageGrade) {
         System.out.println("Am ajuns in clasa StudentDaoImp");
         Student student = null;
-        try( Session session = HibernateUtils.getSessionFactory().openSession()){
-            student = session.get(Student.class,id);
-            if(student !=null){
+        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
+            student = session.get(Student.class, id);
+            if (student != null) {
                 student.setAverageGrade(averageGrade);
                 session.beginTransaction();
                 session.update(student);
                 session.getTransaction().commit();
-            }else {
+            } else {
                 System.out.println("Student was not updated in database.");
             }
 
-        }catch (HibernateException e){
+        } catch (HibernateException e) {
             e.printStackTrace();
         }
         return student;
@@ -61,16 +82,16 @@ public class StudentDaoImp implements StudentDAO {
 
     public void deleteStudentById(Integer id) {
         System.out.println("Am ajuns in clasa StudentDaoImp");
-        try(Session session = HibernateUtils.getSessionFactory().openSession()){
-            Student student = session.get(Student.class,id);
-            if(student!= null){
+        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
+            Student student = session.get(Student.class, id);
+            if (student != null) {
                 session.beginTransaction();
                 session.delete(student);
                 session.getTransaction().commit();
-            }else {
+            } else {
                 System.out.println("Student was not deleted in database.");
             }
-        }catch (HibernateException e){
+        } catch (HibernateException e) {
             e.printStackTrace();
         }
     }
